@@ -21,10 +21,10 @@
 - debug: var=item.public_ip
   with_items: "{{ ec2_webserver1.instances }}"
 
-- name: Add the newly created EC2 instance's IP to the local inventory file
+- name: Add the newly created EC2 instance's IP to the local hosts file
   local_action: 
     module: lineinfile 
-    dest: ./inventory/hosts
+    dest: "./inventory/hosts"
     regexp: "{{ item.public_ip }}"
     insertafter: "[webserver]"
     line: "{{ item.public_ip }}"
