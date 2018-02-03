@@ -1,2 +1,3 @@
 aws_nginx_env/
 group_vars/
+backup/
