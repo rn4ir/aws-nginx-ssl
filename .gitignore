@@ -1,5 +1,5 @@
 aws_nginx_env/
 group_vars/
-inventory/*
+inventory/
 backup/
 *.retry
