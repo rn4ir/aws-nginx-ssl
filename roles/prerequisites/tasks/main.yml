@@ -1,0 +1,53 @@
+---
+    - name: Update yum - RedHat
+      yum: 
+        name: "*"
+        update_cache: yes
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Update apt - Debian
+      apt: 
+        update_cache: yes
+        upgrade: yes
+        state: latest
+      when: ansible_os_family == "Debian"
+    
+    - name: Install prerequisites - Debian
+      apt: 
+        name: "{{ item }}"
+        update_cache: yes
+        state: latest
+      with_items:
+        - firewalld
+        - systemd
+        - git
+        - curl
+        - zlib1g-dev
+      when: ansible_os_family == "Debian"
+
+    - name: Install prerequisites - RedHat
+      yum: 
+        name: "{{ item }}"
+        update_cache: yes
+        state: latest
+      with_items:
+        - firewalld
+        - systemd
+        - git
+        - policycoreutils-python
+        - curl
+      when: ansible_os_family == "RedHat"
+
+    - name: Enable the Firewalld service
+      systemd:
+          name: firewalld
+          state: started
+          enabled: yes
+      changed_when: true
+      notify:
+        - restart_firewalld
+
+    - name: Disable selinux
+      command: "setenforce 0"
+      when: ansible_os_family == "RedHat"
