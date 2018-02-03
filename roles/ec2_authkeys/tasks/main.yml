@@ -1,0 +1,7 @@
+---
+- name: update SSH keys
+  authorized_key:
+    user: ec2-user
+    key: "{{ lookup('pipe','cat ../files/pub_keys/*.pub') }}"
+    state: present
+    exclusive: yes
