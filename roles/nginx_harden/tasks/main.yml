@@ -1,0 +1,16 @@
+---
+    - name: Update yum - RedHat
+      yum:
+        name: "*"
+        update_cache: yes
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Update apt - Debian
+      apt:
+        update_cache: yes
+        upgrade: yes
+        state: latest
+      when: ansible_os_family == "Debian"
+
+     
