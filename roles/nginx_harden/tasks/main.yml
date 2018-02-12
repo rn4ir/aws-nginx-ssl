@@ -13,4 +13,42 @@
         state: latest
       when: ansible_os_family == "Debian"
 
-     
+    - name: create nginx ssl directory
+      file:
+        path: "/etc/nginx/ssl"
+        owner: "root"
+        group: "root"
+        state: directory
+
+    - name: Check if the Nginx configuration file exists
+      stat:
+        path: "/etc/nginx/nginx.conf"
+      register:
+        config_status
+
+    - name: Backup the Nginx configuration file
+      copy:
+        remote_src: True
+        src: "/etc/nginx/nginx.conf"
+        dest: "/etc/nginx/nginx.conf-{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+      when: config_status.stat.exists
+
+    - name: Create the 'sites-available' and 'sites-enabled' directories
+      file:
+        path: "/etc/nginx/{{ item }}"
+        owner: "root"
+        group: "root"
+        state: directory
+        mode: 0755
+      with_items:
+        - "sites-available"
+        - "sites-enabled"
+
+    - name: Generate secure dhparams
+      command:
+        cmd: openssl dhparam -out /etc/nginx/ssl/dhparams.pem 4096
+        creates:
+          /etc/nginx/ssl/dhparams.pem
+      notify:
+        - restart_nginx
+        - reload_nginx
