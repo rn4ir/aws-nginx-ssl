@@ -44,6 +44,15 @@
         - "sites-available"
         - "sites-enabled"
 
+    - name: Copy nginx file
+      template:
+        src: nginx.conf
+        dest: "/etc/nginx/nginx.conf"
+        owner: "root"
+        group: "root"
+      notify:
+        - restart_nginx
+
     - name: Generate secure dhparams
       command:
         cmd: openssl dhparam -out /etc/nginx/ssl/dhparams.pem 4096

@@ -16,3 +16,4 @@
 #    - prerequisites
 #    - nginx
     - nginx_harden
+    - nginx_vhosts
