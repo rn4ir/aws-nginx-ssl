@@ -1,0 +1,4 @@
+---
+- import_tasks: newuser.yml
+- import_tasks: addssh.yml
+- import_tasks: vhost_config.yml
